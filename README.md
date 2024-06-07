@@ -8,3 +8,5 @@ $ cd bouncychat
 $ npm install
 $ npm run start
 ```
+
+The server should then be running at http://localhost:3000 
