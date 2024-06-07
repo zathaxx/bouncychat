@@ -1,0 +1,23 @@
+{
+  "name": "bouncychat",
+  "version": "0.1.0",
+  "description": "The communication platform that will replace Discord, Element, and all the rest.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zathaxx/bouncychat.git"
+  },
+  "author": "",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/zathaxx/bouncychat/issues"
+  },
+  "homepage": "https://github.com/zathaxx/bouncychat#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "ws": "^8.17.0"
+  }
+}
