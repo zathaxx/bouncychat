@@ -8,9 +8,6 @@ const db = require('./db')
 
 let wss = expressWS.getWss()
 
-const interval = setInterval(function ping() {
-}, 30000);
-
 app.ws('/ws', async function(ws, req) {
     let client = new db.Client;
     await client.open()
