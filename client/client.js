@@ -15,7 +15,7 @@ const connect = function() {
         socket.onmessage = (data) => {
             console.log(data);
             let parsedData = JSON.parse(data.data);
-            if(parsedData.append === true) {
+            if (parsedData.append === true) {
                 const newEl = document.createElement('p');
                 newEl.textContent = parsedData.returnText;
                 document.getElementById('websocket-response').appendChild(newEl);
@@ -34,14 +34,25 @@ const isOpen = function(ws) {
     return ws.readyState === ws.OPEN 
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+function sendMessage() {
+    let message_el = document.getElementById('message-text')
+    const message = message_el.value
+    message_el.value = ''
+    if(isOpen(socket)) {
+        socket.send(JSON.stringify({
+            "message": message,
+        }))
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
     connect();
-    document.getElementById('websocket-start').addEventListener('click', function(e) {
-        if(isOpen(socket)) {
-            socket.send(JSON.stringify({
-                "data" : "this is our data to send",
-                "other" : "this can be in any format"
-            }))
-        }
+    document.getElementById('send-message').addEventListener('click', function (e) {
+	sendMessage()
     });
+    document.getElementById('message-text').addEventListener('keydown', function (e) {
+	if (e.keyCode === 13) {
+	    sendMessage()
+	}
+    })
 });

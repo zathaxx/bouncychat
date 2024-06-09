@@ -6,16 +6,23 @@ const expressWS = require('express-ws')(app);
 
 const db = require('./db')
 
+let wss = expressWS.getWss()
+
+const interval = setInterval(function ping() {
+}, 30000);
+
 app.ws('/ws', async function(ws, req) {
     let client = new db.Client;
     await client.open()
     ws.on('message', async function(msg) {
         await client.query()
-        console.log(msg);
-        ws.send(JSON.stringify({
-            "append" : true,
-            "returnText" : "I am using WebSockets!"
-        }));
+	const message = JSON.parse(msg).message
+	wss.clients.forEach(function (sock) {
+	    sock.send(JSON.stringify({
+		"append": true,
+		"returnText": message
+	    }))
+	});
     });
     ws.on('close', async function(msg) {
       await client.close()
