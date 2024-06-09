@@ -4,7 +4,7 @@
   "description": "The communication platform that will replace Discord, Element, and all the rest.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,5 +23,8 @@
     "express-ws": "^5.0.2",
     "pg": "^8.12.0",
     "ws": "^8.17.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.3"
   }
 }
