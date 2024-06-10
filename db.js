@@ -3,13 +3,31 @@ class Client {
     async open() {
         this.client = await pool.connect()
     }
+
+    async joinRoom(room_name) {
+        if (await this.client.query('SELECT * FROM ROOM WHERE name = $1', [room_name]).rowCount <= 0) {
+            this.createRoom(room_name)
+        }
+        if (await this.client.query('INSERT INTO ROOM_USER values (DEFAULT, $1, $2)', [username, room_name])) {}
+        else { console.log("Username already taken!")}
+    }
+
+    async createRoom(name) {
+        try {await this.client.query('INSERT INTO ROOM values($1)', [name])}
+        catch(e) { console.error("Room name already taken!") }
+    }
+
+    async addMessage(room_name, room_user, message_content, timestamp) {
+        await this.client.query('INSERT into MESSAGE values (DEFAULT, $1, $2, $3, $4)', [room_name, room_user, message_content, timestamp])
+    }
+
+    async getRoom(name) {
+        return await this.client.query('SELECT * FROM MESSAGE WHERE room_name = $1 ORDER BY time ASC', [name])
+    }
+
     async close() {
         this.client.release()
     }
-    async query() {
-        const result = await this.client.query('SELECT * FROM ROOM')
-        console.log(result)
-    } 
 }
 
 const { Pool } = require('pg')

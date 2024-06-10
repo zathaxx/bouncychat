@@ -1,22 +1,15 @@
 DROP TABLE IF EXISTS ROOM CASCADE;
-DROP TABLE IF EXISTS PERSON CASCADE;
-DROP TABLE IF EXISTS USER_ROOM CASCADE;
+DROP TABLE IF EXISTS MESSAGE CASCADE;
 
 CREATE TABLE ROOM (
+    name varchar(25) PRIMARY KEY NOT NULL
+);
+
+CREATE TABLE MESSAGE (
     id UUID PRIMARY KEY NOT NULL DEFAULT gen_random_uuid(),
-    name varchar(25)
+    room_name varchar(25) NOT NULL,
+    room_user_name varchar(25) NOT NULL,
+    message TEXT,
+    time bigint,
+    FOREIGN KEY (room_name) REFERENCES ROOM(name)
 );
-
-CREATE TABLE PERSON (
-    id UUID PRIMARY KEY NOT NULL DEFAULT gen_random_uuid(),
-    name varchar(25)
-);
-
-CREATE TABLE USER_ROOM (
-    person_id UUID,
-    room_id UUID,
-    FOREIGN KEY (room_id) REFERENCES ROOM(id) ON DELETE CASCADE,
-    FOREIGN KEY (person_id) REFERENCES PERSON(id) ON DELETE CASCADE,
-    PRIMARY KEY(person_id, room_id)
-);
-

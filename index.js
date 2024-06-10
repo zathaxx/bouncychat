@@ -14,11 +14,14 @@ app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'client'));
 
 app.ws('/ws', async function(ws, req) {
+    let room_name = "Default"
     let client = new db.Client;
     await client.open()
+    client.createRoom(room_name)
     ws.on('message', async function(msg) {
-        await client.query()
 	const data = JSON.parse(msg)
+  console.log(data)
+  client.addMessage(room_name, data.name, data.message, Date.now())
 	wss.clients.forEach(function (sock) {
 	    sock.send(JSON.stringify({
 		"append": true,
@@ -32,12 +35,24 @@ app.ws('/ws', async function(ws, req) {
     });
 });
 
-app.get('/', (req, res) => {
-    //res.sendFile('index.html', {root: path.join(__dirname, 'client')})
-    res.render('index', {
-	chat_log: [
-	    { name: 'admin', message: 'Hello! Welcome to Bouncy Chat, a communications platform powered by WebSocket. Be nice and enjoy the conversation!'}
-	]})
+app.get('/', async (req, res) => {
+  let client = new db.Client
+  let room_name = "Default"
+  await client.open()
+  let messages = (await client.getRoom(room_name)).rows
+
+  let chat_log = [{ name: 'admin', message: 'Hello! Welcome to Bouncy Chat, a communications platform powered by WebSocket. Be nice and enjoy the conversation!'}]
+
+  for (let message of messages) {
+    let m = { name: message.room_user_name, message: message.message}
+    chat_log.push(m)
+  }
+
+  res.render('index', {
+	chat_log: 
+	    chat_log
+	})
+  await client.close()
 })
 
 app.use(express.static('client'))
