@@ -22,7 +22,6 @@ body {
 #chatbox {
     font-size: 1.5em;
     width: 100%;
-    max-width: 800px;
     margin: auto;
 
     overflow: auto;
