@@ -3,8 +3,10 @@ const express = require('express')
 
 const db = require('./db')
 
+require('dotenv').config()
+
 const app = express()
-const port = 3000
+const port = process.env.PORT
 
 const expressWS = require('express-ws')(app);
 
@@ -20,8 +22,7 @@ app.ws('/ws', async function(ws, req) {
     client.createRoom(room_name)
     ws.on('message', async function(msg) {
 	const data = JSON.parse(msg)
-  console.log(data)
-  client.addMessage(room_name, data.name, data.message, Date.now())
+	client.addMessage(room_name, data.name, data.message, Date.now())
 	wss.clients.forEach(function (sock) {
 	    sock.send(JSON.stringify({
 		"append": true,
