@@ -8,7 +8,7 @@ const connect = function() {
         socket = new WebSocket(socketUrl);
 
         socket.onopen = (e) => {
-            socket.send(JSON.stringify({ "loaded" : true }));
+            //socket.send(JSON.stringify({ "loaded" : true }));
             resolve();
         }
 
@@ -16,9 +16,16 @@ const connect = function() {
             console.log(data);
             let parsedData = JSON.parse(data.data);
             if (parsedData.append === true) {
-                const newEl = document.createElement('p');
-                newEl.textContent = parsedData.returnText;
-                document.getElementById('websocket-response').appendChild(newEl);
+		const parent = document.createElement('div')
+		parent.tabIndex = "0"
+                const mEl = document.createElement('p');
+                mEl.textContent = parsedData.returnText;
+		const uEl = document.createElement('span')
+		uEl.textContent = parsedData.name
+		parent.appendChild(uEl)
+		parent.appendChild(mEl)
+                document.getElementById('chatbox').appendChild(parent);
+		scrollBottom()
             }
         }
 
@@ -34,15 +41,32 @@ const isOpen = function(ws) {
     return ws.readyState === ws.OPEN 
 }
 
+function scrollBottom() {
+    let box = document.getElementById('chatbox')
+    box.scrollTop = box.scrollHeight
+}
+
 function sendMessage() {
     let message_el = document.getElementById('message-text')
+    let name = document.getElementById('displayname').value
     const message = message_el.value
     message_el.value = ''
     if(isOpen(socket)) {
         socket.send(JSON.stringify({
             "message": message,
+	    "name": name
         }))
     }
+}
+
+document.getElementById('displayname').addEventListener('change', function (e) {
+    const name = document.getElementById('displayname').value
+    localStorage.setItem('displayname', name)
+})
+
+window.onload = () => {
+    const name = localStorage.getItem('displayname')
+    document.getElementById('displayname').value = name
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -55,4 +79,5 @@ document.addEventListener('DOMContentLoaded', function () {
 	    sendMessage()
 	}
     })
+    scrollBottom()
 });

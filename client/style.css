@@ -1,0 +1,71 @@
+body {
+    background-color: lightblue;
+    font-family: Arial;
+}
+
+.boxes {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: stretch;
+}
+
+.sidebar {
+    max-width: 200px;
+    padding: 0px 20px;
+}
+
+.sidebar #logo {
+    width: 100px;
+}
+
+#chatbox {
+    font-size: 1.5em;
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+
+    overflow: auto;
+    height: 90vh;
+}
+
+#chatbox div {
+    margin: 0px;
+    padding: 5px 0px;
+}
+
+#chatbox div p {
+    display: inline;
+    margin: 0px;
+    padding: 0px;
+}
+
+#chatbox div span {
+    font-weight: bold;
+}
+
+#chatbox div span::after {
+    content: ': ';
+}
+
+input[type=text] {
+    width: 90%;
+    margin: auto;
+    /*display: inline-block;*/
+    padding: 15px;
+    font-size: 1.2em;
+    /*background-color: darkblue;*/
+    background-color: #317ECC;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+input[type=text]::placeholder {
+    color: lightgray;
+}
+
+#send-message {
+    font-size: 1.3em;
+    padding: 10px 20px;
+}

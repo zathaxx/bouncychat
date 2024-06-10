@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bouncy Chat!</title>
+    <meta charset="UTF-8" />
+    <link href="style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="boxes">
+      <div class="sidebar">
+	<img src="logo.png" id="logo" />
+	<h2>Bouncy Chat</h2>
+	<p>A WebSockets-powered communications platform that will replace Discord, Element, and every other chat platform in existence.</p>
+	<p><a href="https://github.com/zathaxx/bouncychat">GitHub</a> - <a href="https://bouncysoftware.com">BouncySoftware</a></p>
+      </div>
+      
+      <div id="chatbox">
+	<% chat_log.forEach(function(message){ %>
+	<div>
+	  <span><%- message.name %></span>
+	  <p tabindex="0"><%- message.message %></p>
+	</div>
+	<% }) %>
+      </div>
+
+      <div class="sidebar">
+	<h2>Preferences</h2>
+	<p>Display name:</p>
+	<input id="displayname" />
+      </div>
+
+    </div>
+    
+    <input id="message-text" type="text" placeholder="What would you like to say?" autofocus />
+    <button id="send-message">Send</button>
+
+    <script src="client.js"></script>
+  </body>
+
+</html>
