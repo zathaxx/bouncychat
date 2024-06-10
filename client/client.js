@@ -43,35 +43,73 @@ function scrollBottom() {
     box.scrollTop = box.scrollHeight
 }
 
+function errorMessage(msg) {
+    appendMessage({
+	name: "error",
+	message: msg
+    })
+}
+
 function sendMessage() {
     let message_el = document.getElementById('message-text')
     let name = document.getElementById('displayname').value
+    
+    if (name === '') {
+	errorMessage("please set a display name before sending a message")
+	return
+    } else if (name === 'admin' || name === 'error') {
+	errorMessage("reserved display name")
+	return
+    }
+
     const message = message_el.value
-    message_el.value = ''
-    if(isOpen(socket)) {
-        socket.send(JSON.stringify({
-            "message": message,
-	    "name": name
-        }))
+    if (message !== '') {
+	message_el.value = ''
+	if(isOpen(socket)) {
+            socket.send(JSON.stringify({
+		"message": message,
+		"name": name
+            }))
+	}
     }
 }
 
+function isReserved(name) {
+    const reserved = ["admin", "error"]
+    return reserved.includes(name)
+}
+
 function appendMessage(data) {
+    const name = localStorage.getItem('displayname')
+
     const parent = document.createElement('div')
     parent.tabIndex = "0"
     const mEl = document.createElement('p')
     mEl.textContent = data.message
     const uEl = document.createElement('span')
     uEl.textContent = data.name
+
+    if (data.name === 'error') {
+	parent.style.backgroundColor = 'red'
+	parent.style.color = 'white'
+    }
+
     parent.appendChild(uEl)
     parent.appendChild(mEl)
-    document.getElementById('chatbox').appendChild(parent)
-    scrollBottom()
 
-    const name = localStorage.getItem('displayname')
-    if (data.name !== name) {
+    if (data.name !== name && !isReserved(data.name)) {
 	sendNotification(data.name, data.message)
     }
+
+    let chatbox_el = document.getElementById('chatbox')
+
+    // disables repeat admin/error messages
+    if (chatbox_el.lastChild.innerHTML === parent.innerHTML && isReserved(data.name)) {
+	return
+    }
+
+    chatbox_el.appendChild(parent)
+    scrollBottom()
 }
 
 document.getElementById('displayname').addEventListener('change', function (e) {
