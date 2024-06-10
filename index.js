@@ -22,7 +22,7 @@ app.ws('/ws', async function(ws, req) {
 	wss.clients.forEach(function (sock) {
 	    sock.send(JSON.stringify({
 		"append": true,
-		"returnText": data.message,
+		"message": data.message,
 		"name": data.name
 	    }))
 	});

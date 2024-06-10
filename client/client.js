@@ -2,37 +2,36 @@ let socket;
 const connect = function() {
     return new Promise((resolve, reject) => {
         const socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:')
-        const port = 3000;
+        const port = 3000
         const socketUrl = `${socketProtocol}//${window.location.hostname}:${port}/ws/`
         
-        socket = new WebSocket(socketUrl);
+        socket = new WebSocket(socketUrl)
 
         socket.onopen = (e) => {
-            //socket.send(JSON.stringify({ "loaded" : true }));
             resolve();
         }
 
         socket.onmessage = (data) => {
-            console.log(data);
-            let parsedData = JSON.parse(data.data);
+            console.log(data)
+            let parsedData = JSON.parse(data.data)
             if (parsedData.append === true) {
 		const parent = document.createElement('div')
 		parent.tabIndex = "0"
-                const mEl = document.createElement('p');
-                mEl.textContent = parsedData.returnText;
+                const mEl = document.createElement('p')
+                mEl.textContent = parsedData.message
 		const uEl = document.createElement('span')
 		uEl.textContent = parsedData.name
 		parent.appendChild(uEl)
 		parent.appendChild(mEl)
-                document.getElementById('chatbox').appendChild(parent);
+                document.getElementById('chatbox').appendChild(parent)
 		scrollBottom()
             }
         }
 
         socket.onerror = (e) => {
-            console.log(e);
-            resolve();
-            connect();
+            console.error(e)
+            resolve()
+            connect()
         }
     });
 }
@@ -70,7 +69,7 @@ window.onload = () => {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    connect();
+    connect()
     document.getElementById('send-message').addEventListener('click', function (e) {
 	sendMessage()
     });

@@ -4,6 +4,7 @@
     <title>Bouncy Chat!</title>
     <meta charset="UTF-8" />
     <link href="style.css" rel="stylesheet" />
+    <link href="logo.png" rel="icon" />
   </head>
   <body>
     <div class="boxes">
@@ -16,9 +17,9 @@
       
       <div id="chatbox">
 	<% chat_log.forEach(function(message){ %>
-	<div>
+	<div tabindex="0">
 	  <span><%- message.name %></span>
-	  <p tabindex="0"><%- message.message %></p>
+	  <p><%- message.message %></p>
 	</div>
 	<% }) %>
       </div>
