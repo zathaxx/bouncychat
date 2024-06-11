@@ -10,7 +10,8 @@ const connect = function() {
     return new Promise((resolve, reject) => {
         const socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:')
         const port = 3000
-        const socketUrl = `${socketProtocol}//${window.location.hostname}:${port}/ws/`
+        const roomName = window.location.pathname.split('/').pop()
+        const socketUrl = `${socketProtocol}//${window.location.hostname}:${port}/ws/${roomName}`
         
         socket = new WebSocket(socketUrl)
 

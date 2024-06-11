@@ -8,37 +8,47 @@ require('dotenv').config()
 const app = express()
 const port = process.env.PORT
 
-const expressWS = require('express-ws')(app);
+require('express-ws')(app)
 
-let wss = expressWS.getWss()
+const wss_map = new Map()
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'client'));
 
-app.ws('/ws', async function(ws, req) {
-    let room_name = "Default"
+app.ws('/ws/:room', async function(ws, req) {
+    let room_name = req.params.room
+    if (!wss_map.has(room_name)) {
+        wss_map.set(room_name, new Set())
+    }
+    wss_map.get(room_name).add(ws)
     let client = new db.Client;
     await client.open()
     client.createRoom(room_name)
     ws.on('message', async function(msg) {
-	const data = JSON.parse(msg)
-	client.addMessage(room_name, data.name, data.message, Date.now())
-	wss.clients.forEach(function (sock) {
-	    sock.send(JSON.stringify({
-		"append": true,
-		"message": data.message,
-		"name": data.name
-	    }))
-	});
+        const data = JSON.parse(msg)
+        await client.addMessage(room_name, data.name, data.message, Date.now())
+        wss_map.get(room_name).forEach(function(sock) {
+            sock.send(JSON.stringify({
+          "append": true,
+          "message": data.message,
+          "name": data.name
+            }))
+        });
     });
     ws.on('close', async function(msg) {
-      await client.close()
+        wss_map.get(room_name).delete(ws)
+        if (wss_map.get(room_name).size === 0) {
+            wss_map.delete(room_name)
+        }
+        await client.close()
     });
 });
 
-app.get('/', async (req, res) => {
+app.use(express.static('client'))
+
+app.get('/:room', async (req, res) => {
   let client = new db.Client
-  let room_name = "Default"
+  let room_name = req.params.room
   await client.open()
   let messages = (await client.getRoom(room_name)).rows
 
@@ -55,8 +65,6 @@ app.get('/', async (req, res) => {
 	})
   await client.close()
 })
-
-app.use(express.static('client'))
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
