@@ -25,6 +25,10 @@ class Client {
         return await this.client.query('SELECT * FROM MESSAGE WHERE room_name = $1 ORDER BY time ASC', [name])
     }
 
+    async getAllRooms() {
+	return await this.client.query('SELECT * FROM ROOM')
+    }
+
     async close() {
         this.client.release()
     }

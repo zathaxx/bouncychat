@@ -13,7 +13,7 @@ require('express-ws')(app)
 const wss_map = new Map()
 
 app.set('view engine', 'ejs')
-app.set('views', path.join(__dirname, 'client'));
+app.set('views', path.join(__dirname, 'views'));
 
 app.ws('/ws/:room', async function(ws, req) {
     let room_name = req.params.room
@@ -44,7 +44,7 @@ app.ws('/ws/:room', async function(ws, req) {
     });
 });
 
-app.use(express.static('client'))
+app.use(express.static('static'))
 
 app.get('/:room', async (req, res) => {
   let client = new db.Client
@@ -59,11 +59,20 @@ app.get('/:room', async (req, res) => {
     chat_log.push(m)
   }
 
-  res.render('index', {
+  res.render('room', {
 	chat_log: 
 	    chat_log
 	})
   await client.close()
+})
+
+app.get('/', async (req, res) => {
+    let client = new db.Client
+    await client.open()
+    let rooms = (await client.getAllRooms()).rows
+    res.render('index', {
+	rooms: rooms
+    })
 })
 
 app.listen(port, () => {

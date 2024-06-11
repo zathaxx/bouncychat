@@ -3,6 +3,12 @@ body {
     font-family: Arial;
 }
 
+/* Front page styling */
+
+
+
+/* Chatroom styling */
+
 .boxes {
     display: flex;
     flex-wrap: nowrap;
@@ -47,7 +53,7 @@ body {
     content: ': ';
 }
 
-input[type=text] {
+#message-text {
     width: 90%;
     margin: auto;
     /*display: inline-block;*/
