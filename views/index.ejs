@@ -4,19 +4,21 @@
     <%- include('head'); -%>
   </head>
   <body>
-    <h1>Welcome to Bouncy Chat!</h1>
-    <div>
-      <input id="roomid" placeholder="bananasundae" />
-      <button id="loadroom">Create</button>
-    </div>
-
-    <div id="active-chatrooms">
-      <h2>Active Rooms</h2>
-      <% rooms.forEach((room) => { %>
+    <div class="main">
+      <h1>Welcome to Bouncy Chat!</h1>
       <div>
-	<a href="/<%= room %>"><%= room.name %></a>
+	<input id="roomid" placeholder="bananasundae" />
+	<button id="loadroom">Create Room</button>
       </div>
-      <% }) %>
+
+      <div id="active-chatrooms">
+	<h2>Active Rooms</h2>
+	<% rooms.forEach((room) => { %>
+	<div>
+	  <a href="/<%= room.name %>"><%= room.name %></a>
+	</div>
+	<% }) %>
+      </div>
     </div>
 
     <script src="main.js"></script>
