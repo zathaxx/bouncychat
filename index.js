@@ -23,7 +23,8 @@ app.ws('/ws/:room', async function(ws, req) {
     wss_map.get(room_name).add(ws)
     let client = new db.Client;
     await client.open()
-    client.createRoom(room_name)
+    await client.setState(room_name, true)
+    await client.createRoom(room_name)
     ws.on('message', async function(msg) {
         const data = JSON.parse(msg)
         await client.addMessage(room_name, data.name, data.message, Date.now())
@@ -39,6 +40,7 @@ app.ws('/ws/:room', async function(ws, req) {
         wss_map.get(room_name).delete(ws)
         if (wss_map.get(room_name).size === 0) {
             wss_map.delete(room_name)
+            client.setState(room_name, false)
         }
         await client.close()
     });
@@ -51,7 +53,6 @@ app.get('/:room', async (req, res) => {
   let room_name = req.params.room
   await client.open()
   let messages = (await client.getRoom(room_name)).rows
-
   let chat_log = [{ name: 'admin', message: 'Hello! Welcome to Bouncy Chat, a communications platform powered by WebSocket. Be nice and enjoy the conversation!'}]
 
   for (let message of messages) {
