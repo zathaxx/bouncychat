@@ -13,7 +13,7 @@ class Client {
     }
 
     async createRoom(name) {
-        try {await this.client.query('INSERT INTO ROOM values($1)', [name])}
+        try {await this.client.query('INSERT INTO ROOM values($1, $2)', [name, true])}
         catch(e) { console.error("Room name already taken!") }
     }
 
@@ -26,11 +26,15 @@ class Client {
     }
 
     async getAllRooms() {
-	return await this.client.query('SELECT * FROM ROOM')
+	return await this.client.query('SELECT * FROM ROOM WHERE active = true')
     }
 
     async close() {
         this.client.release()
+    }
+
+    async setState(room_name, state) {
+        await this.client.query('UPDATE ROOM SET active = $1 WHERE name = $2', [state, room_name])
     }
 }
 
