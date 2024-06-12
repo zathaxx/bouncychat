@@ -54,7 +54,7 @@ app.ws('/ws/:room', async function(ws, req) {
         wss_map.get(room_name).delete(ws)
         if (wss_map.get(room_name).size === 0) {
             wss_map.delete(room_name)
-            client.setState(room_name, false)
+            await client.setState(room_name, false)
         }
         await client.close()
     });
