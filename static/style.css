@@ -74,3 +74,22 @@ input[type=text]::placeholder {
     font-size: 1.3em;
     padding: 10px 20px;
 }
+
+.leave a {
+    text-decoration: none;
+    background-color: #317ECC;
+    color:white;
+    padding: 10px;
+    border-radius: 5px;
+    border-color: black;
+}
+
+.leave a:hover {
+    transition: 0.4s;
+    background-color: #0f4f8f;
+}
+
+.leave {
+    text-align: center;
+}
+
