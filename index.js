@@ -15,6 +15,15 @@ const wss_map = new Map()
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'));
 
+function dateToString(date) {
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate() + 1).padStart(2, '0')
+    const hour = String(date.getHours() + 1).padStart(2, '0')
+    const minute = String(date.getMinutes() + 1).padStart(2, '0')
+    const date_string = `${hour}:${minute} - ${date.getFullYear()}-${month}-${day}`
+    return date_string
+}
+
 app.ws('/ws/:room', async function(ws, req) {
     let room_name = req.params.room
     if (!wss_map.has(room_name)) {
@@ -27,12 +36,17 @@ app.ws('/ws/:room', async function(ws, req) {
     await client.createRoom(room_name)
     ws.on('message', async function(msg) {
         const data = JSON.parse(msg)
-        await client.addMessage(room_name, data.name, data.message, Date.now())
+	const date_now = Date.now()
+	let date = new Date(date_now)
+    	date_str = dateToString(date)
+
+        await client.addMessage(room_name, data.name, data.message, date_now)
         wss_map.get(room_name).forEach(function(sock) {
             sock.send(JSON.stringify({
           "append": true,
           "message": data.message,
-          "name": data.name
+		"name": data.name,
+		"date": date_str
             }))
         });
     });
@@ -55,8 +69,9 @@ app.get('/:room', async (req, res) => {
   let messages = (await client.getRoom(room_name)).rows
   let chat_log = [{ name: 'admin', message: 'Hello! Welcome to Bouncy Chat, a communications platform powered by WebSocket. Be nice and enjoy the conversation!'}]
 
-  for (let message of messages) {
-    let m = { name: message.room_user_name, message: message.message}
+    for (let message of messages) {
+	const date = new Date(Number(message.time))
+      let m = { name: message.room_user_name, message: message.message, date: dateToString(date)}
     chat_log.push(m)
   }
 

@@ -75,6 +75,11 @@ input[type=text]::placeholder {
     padding: 10px 20px;
 }
 
+.message-date {
+    color: gray;
+    float: right;
+}
+
 .leave a {
     text-decoration: none;
     background-color: #317ECC;
@@ -92,4 +97,3 @@ input[type=text]::placeholder {
 .leave {
     text-align: center;
 }
-

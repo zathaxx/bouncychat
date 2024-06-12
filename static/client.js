@@ -89,6 +89,12 @@ function appendMessage(data) {
     mEl.textContent = data.message
     const uEl = document.createElement('span')
     uEl.textContent = data.name
+    uEl.className = 'sender-name'
+
+    const dEl = document.createElement('a')
+    dEl.className = 'message-date'
+
+    dEl.textContent = data.date
 
     if (data.name === 'error') {
 	parent.style.backgroundColor = 'red'
@@ -97,6 +103,7 @@ function appendMessage(data) {
 
     parent.appendChild(uEl)
     parent.appendChild(mEl)
+    parent.appendChild(dEl)
 
     if (data.name !== name && !isReserved(data.name)) {
 	sendNotification(data.name, data.message)
