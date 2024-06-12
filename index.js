@@ -17,9 +17,9 @@ app.set('views', path.join(__dirname, 'views'));
 
 function dateToString(date) {
     const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate() + 1).padStart(2, '0')
-    const hour = String(date.getHours() + 1).padStart(2, '0')
-    const minute = String(date.getMinutes() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const hour = String(date.getHours()).padStart(2, '0')
+    const minute = String(date.getMinutes()).padStart(2, '0')
     const date_string = `${hour}:${minute} - ${date.getFullYear()}-${month}-${day}`
     return date_string
 }
